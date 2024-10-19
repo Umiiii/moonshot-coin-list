@@ -9,6 +9,8 @@ interface Coin {
   imageUrl: string;
   decimals: number;
   circulatingSupply: number;
+  chain: string;
+  contractAddress: string;
   day: {
     price: number;
     holders: number;
@@ -74,6 +76,7 @@ const TrendingCoins = () => {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">24h Change</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Volume</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Market Cap</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contract Address</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Listed At</th>
                   </tr>
@@ -109,6 +112,22 @@ const TrendingCoins = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">${formatMarketCap(coin)}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {coin.chain === 'solana' ? (
+                            <a
+                              href={`https://solscan.io/token/${coin.contractAddress}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:text-blue-800"
+                            >
+                              {`${coin.contractAddress.slice(0, 6)}...${coin.contractAddress.slice(-4)}`}
+                            </a>
+                          ) : (
+                            'N/A'
+                          )}
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-500">{new Date(coin.createdAt).toLocaleDateString()}</div>

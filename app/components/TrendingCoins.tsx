@@ -39,7 +39,7 @@ const TrendingCoins = () => {
         
         // Sort coins by listedAt date
         formattedData.forEach(section => {
-          section.coins.sort((a, b) => new Date(b.listedAt).getTime() - new Date(a.listedAt).getTime());
+          section.coins.sort((a: Coin, b: Coin) => new Date(b.listedAt).getTime() - new Date(a.listedAt).getTime());
         });
         
         setTrendingCoinsData(formattedData);

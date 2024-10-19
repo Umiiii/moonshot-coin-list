@@ -30,9 +30,7 @@ export const metadata: Metadata = {
     description: "Track trending cryptocurrencies, their prices, market caps, and more with Moonshot.",
    // image: "/twitter-image.jpg", // Add a Twitter card image (create this image and place it in the public folder)
   },
-  robots: "index, follow",
-  viewport: "width=device-width, initial-scale=1",
-  themeColor: "#ffffff", // Adjust this color to match your brand
+  robots: "index, follow"
 };
 
 export default function RootLayout({

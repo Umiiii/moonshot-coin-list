@@ -33,9 +33,10 @@ const TrendingCoins = () => {
   useEffect(() => {
     const fetchTrendingCoins = async () => {
       try {
-        const response = await fetch('https://srv.moonshot.money/categories?limit=10');
-        const data = await response.json();
+        const response = await fetch('/api/categories?limit=10',{method: 'GET'});
+     
         
+        const data = await response.json();
         // Check if the data is an array or a single object
         const formattedData = Array.isArray(data) ? data : [data];
         

@@ -1,0 +1,9 @@
+{
+    "routes": [
+        {
+            "src": "/api/(.*)",
+            "dest": "https://bold-salad-d456.geniusumi.workers.dev/:path*",
+            "methods": ["GET", "POST", "PUT", "DELETE"]
+        }
+    ]
+}

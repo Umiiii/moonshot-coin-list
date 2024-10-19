@@ -126,7 +126,7 @@ const TrendingCoins = () => {
       .sort((a, b) => new Date(b.listedAt).getTime() - new Date(a.listedAt).getTime());
   }, [trendingCoinsData]);
 
-  const renderTableContent = (coins: Coin[]) => (
+  const _ = (coins: Coin[]) => (
     <table className="min-w-full">
       <thead className="bg-gray-50">
         <tr>

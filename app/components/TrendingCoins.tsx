@@ -153,8 +153,8 @@ const TrendingCoins = () => {
                   className="rounded-full"
                 />
                 <div className="ml-4">
-                  <div className="text-sm font-medium text-gray-900">{coin.name}</div>
-                  <div className="text-sm text-gray-500">{coin.ticker}</div>
+                  <div className="text-sm font-medium text-gray-900">{coin.ticker}</div>
+                  <div className="text-sm text-gray-500">{coin.name}</div>
                   <div className="flex flex-wrap gap-1 mt-1">
                     {getTagsForCoin(coin.id).map((tag, index) => (
                       <span 

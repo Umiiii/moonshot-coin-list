@@ -199,10 +199,28 @@ const TrendingCoins = () => {
               </div>
             </td>
             <td className="px-6 py-4 whitespace-nowrap">
-              <div className="text-sm text-gray-500">{new Date(coin.createdAt).toLocaleDateString()}</div>
+              <div className="text-sm text-gray-500">
+                {new Date(coin.createdAt).toLocaleString(undefined, {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: true
+                })}
+              </div>
             </td>
             <td className="px-6 py-4 whitespace-nowrap">
-              <div className="text-sm text-gray-500">{new Date(coin.listedAt).toLocaleDateString()}</div>
+              <div className="text-sm text-gray-500">
+                {new Date(coin.listedAt).toLocaleString(undefined, {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: true
+                })}
+              </div>
             </td>
           </tr>
         ))}
@@ -218,7 +236,7 @@ const TrendingCoins = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-8xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-4xl font-bold text-gray-900 mb-4">Moonshot Listing Coins</h1>
@@ -264,7 +282,105 @@ const TrendingCoins = () => {
                 className="bg-white rounded-lg shadow-md overflow-hidden"
               >
                 <div className="overflow-x-auto">
-                  {renderTableContent(allCoins)}
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Coin</th>
+                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">24h Change</th>
+                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Volume</th>
+                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Market Cap</th>
+                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Contract Address</th>
+                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Listed At</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {allCoins.map((coin) => (
+                        <tr key={coin.id} className="hover:bg-gray-50 transition-colors duration-200">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <Image
+                                src={coin.imageUrl}
+                                alt={coin.name}
+                                width={40}
+                                height={40}
+                                className="rounded-full"
+                              />
+                              <div className="ml-4">
+                                <div className="text-base font-medium text-gray-900">{coin.ticker}</div>
+                                <div className="text-sm text-gray-500">{coin.name}</div>
+                                <div className="flex flex-wrap gap-1 mt-1">
+                                  {getTagsForCoin(coin.id).map((tag, index) => (
+                                    <span 
+                                      key={index} 
+                                      className={`inline-block px-2 py-1 text-xs font-semibold text-white ${getColorForTag(tag)} rounded-full`}
+                                    >
+                                      {tag}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-base text-gray-900">${coin.day.price.toFixed(8)}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className={`text-sm ${coin.day.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                              {coin.day.change >= 0 ? '▲' : '▼'} {Math.abs(coin.day.change).toFixed(2)}%
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">${coin.day.volume.toLocaleString()}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">${formatMarketCap(coin)}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">
+                              {coin.chain === 'solana' ? (
+                                <a
+                                  href={`https://solscan.io/token/${coin.contractAddress}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:text-blue-800"
+                                >
+                                  {`${coin.contractAddress.slice(0, 6)}...${coin.contractAddress.slice(-4)}`}
+                                </a>
+                              ) : (
+                                'N/A'
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-500">
+                              {new Date(coin.createdAt).toLocaleString(undefined, {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: true
+                              })}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-500">
+                              {new Date(coin.listedAt).toLocaleString(undefined, {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: true
+                              })}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </motion.div>
             ) : (
@@ -379,10 +495,28 @@ const TrendingCoins = () => {
                                       </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                      <div className="text-sm text-gray-500">{new Date(coin.createdAt).toLocaleDateString()}</div>
+                                      <div className="text-sm text-gray-500">
+                                        {new Date(coin.createdAt).toLocaleString(undefined, {
+                                          year: 'numeric',
+                                          month: 'short',
+                                          day: 'numeric',
+                                          hour: '2-digit',
+                                          minute: '2-digit',
+                                          hour12: true
+                                        })}
+                                      </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                      <div className="text-sm text-gray-500">{new Date(coin.listedAt).toLocaleDateString()}</div>
+                                      <div className="text-sm text-gray-500">
+                                        {new Date(coin.listedAt).toLocaleString(undefined, {
+                                          year: 'numeric',
+                                          month: 'short',
+                                          day: 'numeric',
+                                          hour: '2-digit',
+                                          minute: '2-digit',
+                                          hour12: true
+                                        })}
+                                      </div>
                                     </td>
                                   </tr>
                                 ))}

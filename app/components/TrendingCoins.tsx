@@ -133,6 +133,14 @@ const TrendingCoins = () => {
     exit: { opacity: 0, y: -20, transition: { duration: 0.5 } }
   };
 
+  // Add this function to check if a date is within the last 24 hours
+  const isWithinLast24Hours = (date: string) => {
+    const now = new Date();
+    const listedDate = new Date(date);
+    const diffInHours = (now.getTime() - listedDate.getTime()) / (1000 * 60 * 60);
+    return diffInHours <= 24;
+  };
+
   return (
     <div className="bg-gray-100 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-8xl mx-auto">
@@ -196,7 +204,12 @@ const TrendingCoins = () => {
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {allCoins.map((coin) => (
-                        <tr key={coin.id} className="hover:bg-gray-50 transition-colors duration-200">
+                        <tr 
+                          key={coin.id} 
+                          className={`hover:bg-gray-50 transition-colors duration-200 ${
+                            isWithinLast24Hours(coin.listedAt) ? 'bg-yellow-50' : ''
+                          }`}
+                        >
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
                               <Image
@@ -207,7 +220,14 @@ const TrendingCoins = () => {
                                 className="rounded-full"
                               />
                               <div className="ml-4">
-                                <div className="text-base font-medium text-gray-900">{coin.ticker}</div>
+                                <div className="text-base font-medium text-gray-900">
+                                  {coin.ticker}
+                                  {isWithinLast24Hours(coin.listedAt) && (
+                                    <span className="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                      Listed in recent 24 hours
+                                    </span>
+                                  )}
+                                </div>
                                 <div className="text-sm text-gray-500">{coin.name}</div>
                                 <div className="flex flex-wrap gap-1 mt-1">
                                   {getTagsForCoin(coin.id).map((tag, index) => (
@@ -337,7 +357,12 @@ const TrendingCoins = () => {
                               </thead>
                               <tbody className="divide-y divide-gray-200">
                                 {section.coins.slice(0, 10).map((coin) => (
-                                  <tr key={coin.id} className="hover:bg-gray-50 transition-colors duration-200">
+                                  <tr 
+                                    key={coin.id} 
+                                    className={`hover:bg-gray-50 transition-colors duration-200 ${
+                                      isWithinLast24Hours(coin.listedAt) ? 'bg-yellow-50' : ''
+                                    }`}
+                                  >
                                     <td className="px-6 py-4 whitespace-nowrap">
                                       <div className="flex items-center">
                                         <Image
@@ -348,7 +373,14 @@ const TrendingCoins = () => {
                                           className="rounded-full"
                                         />
                                         <div className="ml-4">
-                                          <div className="text-sm font-medium text-gray-900">{coin.ticker}</div>
+                                          <div className="text-sm font-medium text-gray-900">
+                                            {coin.ticker}
+                                            {isWithinLast24Hours(coin.listedAt) && (
+                                              <span className="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                New
+                                              </span>
+                                            )}
+                                          </div>
                                           <div className="text-sm text-gray-500">{coin.name}</div>
                                           <div className="flex flex-wrap gap-1 mt-1">
                                             {getTagsForCoin(coin.id).map((tag, index) => (

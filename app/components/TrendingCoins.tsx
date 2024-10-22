@@ -5,6 +5,7 @@ import { ChevronDownIcon, TableCellsIcon, ListBulletIcon, InformationCircleIcon 
 import { motion, AnimatePresence } from 'framer-motion';
 import { TwitterShareButton, TwitterFollowButton } from 'react-twitter-embed';
 import { sendGTMEvent } from '@next/third-parties/google';
+import { FaTwitter } from 'react-icons/fa'; // Add this import for the Twitter icon
 
 interface Coin {
   id: string;
@@ -335,8 +336,8 @@ const TrendingCoins = () => {
                             isWithinLast24Hours(coin.listedAt) ? 'bg-yellow-50' : ''
                           }`}
                         >
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center">
+                          <td className="px-6 py-4">
+                            <div className="flex items-start">
                               <Image
                                 src={coin.imageUrl}
                                 alt={coin.name}
@@ -346,14 +347,29 @@ const TrendingCoins = () => {
                               />
                               <div className="ml-4">
                                 <div className="text-base font-medium text-gray-900">
-                                  {coin.ticker}
+                                  <strong>{coin.ticker}</strong>
                                   {isWithinLast24Hours(coin.listedAt) && (
                                     <span className="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                       Listed in recent 24 hours
                                     </span>
                                   )}
                                 </div>
-                                <div className="text-sm text-gray-500">{coin.name}</div>
+                                <div className="text-sm text-gray-800">{coin.name}</div>
+                                {coin.twitter && (
+                                  <a
+                                    href={`https://twitter.com/${coin.twitter}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-500 hover:text-blue-700 inline-flex items-center mt-1"
+                                    onClick={() => sendGTMEvent({ event: 'clickTwitterLink', coinId: coin.id, twitterHandle: coin.twitter })}
+                                  >
+                                    <FaTwitter className="mr-1" />
+                                    @{coin.twitter}
+                                  </a>
+                                )}
+                                <div className="text-xs text-gray-500 mt-1 max-w-xs whitespace-normal">
+                                  {coin.description}
+                                </div>
                                 <div className="flex flex-wrap gap-1 mt-1">
                                   {getTagsForCoin(coin).map((tag, index) => (
                                     <span 
@@ -504,8 +520,8 @@ const TrendingCoins = () => {
                                     isWithinLast24Hours(coin.listedAt) ? 'bg-yellow-50' : ''
                                   }`}
                                 >
-                                  <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="flex items-center">
+                                  <td className="px-6 py-4">
+                                    <div className="flex items-start">
                                       <Image
                                         src={coin.imageUrl}
                                         alt={coin.name}
@@ -515,14 +531,29 @@ const TrendingCoins = () => {
                                       />
                                       <div className="ml-4">
                                         <div className="text-sm font-medium text-gray-900">
-                                          {coin.ticker}
+                                          <strong>{coin.ticker}</strong>
                                           {isWithinLast24Hours(coin.listedAt) && (
                                             <span className="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                               New
                                             </span>
                                           )}
                                         </div>
-                                        <div className="text-sm text-gray-500">{coin.name}</div>
+                                        <div className="text-sm text-gray-800">{coin.name}</div>
+                                        {coin.twitter && (
+                                          <a
+                                            href={`https://twitter.com/${coin.twitter}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-500 hover:text-blue-700 inline-flex items-center mt-1"
+                                            onClick={() => sendGTMEvent({ event: 'clickTwitterLink', coinId: coin.id, twitterHandle: coin.twitter })}
+                                          >
+                                            <FaTwitter className="mr-1" />
+                                            @{coin.twitter}
+                                          </a>
+                                        )}
+                                        <div className="text-xs text-gray-500 mt-1 max-w-xs whitespace-normal">
+                                          {coin.description}
+                                        </div>
                                         <div className="flex flex-wrap gap-1 mt-1">
                                           {getTagsForCoin(coin).map((tag, index) => (
                                             <span 

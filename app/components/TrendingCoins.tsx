@@ -1,7 +1,7 @@
 "use client";
 import Image from 'next/image';
 import { useState, useEffect, useMemo } from 'react';
-import { ChevronDownIcon, TableCellsIcon, ListBulletIcon } from '@heroicons/react/24/solid';
+import { ChevronDownIcon, TableCellsIcon, ListBulletIcon, InformationCircleIcon } from '@heroicons/react/24/solid';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TwitterShareButton, TwitterFollowButton } from 'react-twitter-embed';
 
@@ -36,7 +36,56 @@ const TrendingCoins = () => {
   const [foldedSections, setFoldedSections] = useState<{ [key: string]: boolean }>({});
   const [isLoading, setIsLoading] = useState(true);
   const [displayMode, setDisplayMode] = useState<'table' | 'sections'>('table');
-
+  const csvHistoryData = [
+    {
+      "mint_address": "6JGSHS9GrE9uG8ix63w3DPMYHrgrJ6J4QyHbBhAepump",
+      "token_price_usd": 0.00159349921249322
+    },
+    {
+      "mint_address": "2zrH2jE542mzB4HABgBjdWMQPtNC5H12pwo1iLpfpump",
+      "token_price_usd": 0.005621915501925176
+    },
+    {
+      "mint_address": "qiaupfns561LJPudU2YL48S2mx1nbekrn8V4RrpyJG6",
+      "token_price_usd": 0.007705233186906984
+    },
+    {
+      "mint_address": "GJAFwWjJ3vnTsrQVabjBVK2TYB1YtRCQXRDfDgUnpump",
+      "token_price_usd": 0.020066650880012877
+    },
+    {
+      "mint_address": "J7tYmq2JnQPvxyhcXpCDrvJnc9R5ts8rv7tgVHDPsw7U",
+      "token_price_usd": 0.014801094410418575
+    },
+    {
+      "mint_address": "H2c31USxu35MDkBrGph8pUDUnmzo2e4Rf4hnvL2Upump",
+      "token_price_usd": 0.020364699127351244
+    },
+    {
+      "mint_address": "HeJUFDxfJSzYFUuHLxkMqCgytU31G6mjP4wKviwqpump",
+      "token_price_usd": 0.035991546375265145
+    },
+    {
+      "mint_address": "FqvtZ2UFR9we82Ni4LeacC1zyTiQ77usDo31DUokpump",
+      "token_price_usd": 0.035986293107104175
+    },
+    {
+      "mint_address": "CzLSujWBLFsSjncfkh59rUFqvafWcY5tzedWJSuypump",
+      "token_price_usd": 0.013949596970320995
+    },
+    {
+      "mint_address": "7iagMTDPfNSR5zVcERT1To7A9eaQoz58dJAh42EMHcCC",
+      "token_price_usd": 0.003844023290821382
+    },
+    {
+      "mint_address": "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump",
+      "token_price_usd": 0.02159479456224017
+    },
+    {
+      "mint_address": "H7ed7UgcLp3ax4X1CQ5WuWDn6d1pprfMMYiv5ejwLWWU",
+      "token_price_usd": 0.0000314086181344591
+    }
+  ];
   useEffect(() => {
     const fetchTrendingCoins = async () => {
       setIsLoading(true);
@@ -131,6 +180,29 @@ const TrendingCoins = () => {
         }
       });
     });
+    // init csv history data
+    Array.from(coinMap.values()).forEach(coin => {
+      const history = csvHistoryData.find(h => h.mint_address === coin.contractAddress);
+      if (history) {
+        coin.priceAtListed = history.token_price_usd;
+      }
+    });
+
+
+    //let output = [];
+    // for (const coin of coinMap.values()) {
+    //   const listedAt = new Date(coin.listedAt);
+    //   const tenMinutesAgo = new Date(listedAt.getTime() - 10 * 60 * 1000);
+    //   const oneMinuteAgo = new Date(listedAt.getTime() - 1 * 60 * 1000);
+      
+    //   output.push("('"+
+    //     coin.contractAddress+ "', TIMESTAMP '"+ 
+    //     tenMinutesAgo.toISOString().replace('T', ' ').slice(0, 19) + "', TIMESTAMP '" +
+    //     oneMinuteAgo.toISOString().replace('T', ' ').slice(0, 19) + "')"
+    //   );
+    // }
+    // console.log(output.join(",\n"));
+
     return Array.from(coinMap.values())
       .sort((a, b) => new Date(b.listedAt).getTime() - new Date(a.listedAt).getTime());
   }, [trendingCoinsData]);
@@ -227,12 +299,22 @@ const TrendingCoins = () => {
                       <tr>
                         <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Coin</th>
                         <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Price /<br></br> Market Cap</th>
+                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                          <div className="flex items-center">
+                            Price At Listed /<br></br> Price Since Listed
+                            <div className="relative ml-1 group">
+                              <InformationCircleIcon className="h-5 w-5 text-gray-400 cursor-help" />
+                              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                                The average price 10 minutes before listing
+                              </div>
+                            </div>
+                          </div>
+                        </th>
                         <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">24h Change</th>
                         <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Volume</th>
                         <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Contract Address</th>
                         <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Created At</th>
                         <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Listed At</th>
-                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Price At Listed /<br></br> Price Since Listed</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
@@ -276,8 +358,16 @@ const TrendingCoins = () => {
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-base text-gray-900">${coin.day.price.toFixed(8)}</div>
+                            <div className="text-base text-gray-800">${coin.day.price.toFixed(8)}</div>
                             <div className="text-sm text-gray-500">${formatMarketCap(coin)}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-base text-gray-800">
+                              ${coin.priceAtListed ? coin.priceAtListed.toFixed(8) : '-'}
+                            </div>
+                            <div className={`text-sm ${calculatePriceChangeSinceListed(coin).change !== null && parseFloat(calculatePriceChangeSinceListed(coin).change) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                              ${calculatePriceChangeSinceListed(coin).change !== null ? `${calculatePriceChangeSinceListed(coin).change} / ${calculatePriceChangeSinceListed(coin).percentage}` : '-'}
+                            </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className={`text-sm ${coin.day.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
@@ -325,14 +415,6 @@ const TrendingCoins = () => {
                                 minute: '2-digit',
                                 hour12: true
                               })}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">
-                              ${coin.priceAtListed ? coin.priceAtListed.toFixed(8) : '-'}
-                            </div>
-                            <div className="text-sm text-gray-500">
-                              {calculatePriceChangeSinceListed(coin).change} / {calculatePriceChangeSinceListed(coin).percentage}
                             </div>
                           </td>
                         </tr>
@@ -385,12 +467,22 @@ const TrendingCoins = () => {
                               <tr>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Coin</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price / Market Cap</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                  <div className="flex items-center">
+                                    Price At Listed / Price Since Listed
+                                    <div className="relative ml-1 group">
+                                      <InformationCircleIcon className="h-4 w-4 text-gray-400 cursor-help" />
+                                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                                        The average price 10 minutes before listing 
+                                      </div>
+                                    </div>
+                                  </div>
+                                </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">24h Change</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Volume</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contract Address</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Listed At</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price At Listed / Price Since Listed</th>
                               </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200">
@@ -438,6 +530,14 @@ const TrendingCoins = () => {
                                     <div className="text-sm text-gray-500">${formatMarketCap(coin)}</div>
                                   </td>
                                   <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="text-sm text-gray-900">
+                                      ${coin.priceAtListed ? coin.priceAtListed.toFixed(8) : '-'}
+                                    </div>
+                                    <div className={`text-sm ${calculatePriceChangeSinceListed(coin).change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                      {calculatePriceChangeSinceListed(coin).change} / {calculatePriceChangeSinceListed(coin).percentage}
+                                    </div>
+                                  </td>
+                                  <td className="px-6 py-4 whitespace-nowrap">
                                     <div className={`text-sm ${coin.day.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                                       {coin.day.change >= 0 ? '▲' : '▼'} {Math.abs(coin.day.change).toFixed(2)}%
                                     </div>
@@ -483,14 +583,6 @@ const TrendingCoins = () => {
                                         minute: '2-digit',
                                         hour12: true
                                       })}
-                                    </div>
-                                  </td>
-                                  <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="text-sm text-gray-900">
-                                      ${coin.priceAtListed ? coin.priceAtListed.toFixed(8) : '-'}
-                                    </div>
-                                    <div className="text-sm text-gray-500">
-                                      {calculatePriceChangeSinceListed(coin).change} / {calculatePriceChangeSinceListed(coin).percentage}
                                     </div>
                                   </td>
                                 </tr>

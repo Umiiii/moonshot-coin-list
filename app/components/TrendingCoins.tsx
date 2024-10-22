@@ -152,8 +152,8 @@ const TrendingCoins = () => {
           </div>
           <div className="flex items-center space-x-4">
             <TwitterShareButton
-              url={window.location.href}
-              options={{ text: 'Check out new listings on Moonshot!' }}
+              url="https://moonshot.umi.cat/"
+              options={{ text: 'Check out new listings on Moonshot' }}
             />
             <TwitterFollowButton screenName="Geniusumi9" />
             <button

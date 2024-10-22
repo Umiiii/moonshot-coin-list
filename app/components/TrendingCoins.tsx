@@ -20,6 +20,7 @@ interface Coin {
     change: number;
     volume: number;
   };
+  priceAtListed: number;
   createdAt: string;
   listedAt: string;
 }
@@ -91,11 +92,18 @@ const TrendingCoins = () => {
     exit: { opacity: 0, height: 0, transition: { duration: 0.5 } }
   };
 
-  // Add this new function to get tags for a coin
-  const getTagsForCoin = (coinId: string) => {
-    return trendingCoinsData
-      .filter(section => section.coins.some(coin => coin.id === coinId))
+  // Modify the getTagsForCoin function
+  const getTagsForCoin = (coin: Coin) => {
+    const tags = trendingCoinsData
+      .filter(section => section.coins.some(c => c.id === coin.id))
       .map(section => section.name);
+    
+    // Add "pump.fun" tag if the contract address ends with "pump"
+    if (coin.contractAddress.toLowerCase().endsWith('pump')) {
+      tags.push('pump.fun');
+    }
+    
+    return tags;
   };
 
   // Function to generate a consistent color based on the tag name
@@ -142,33 +150,50 @@ const TrendingCoins = () => {
     return diffInHours <= 24;
   };
 
+  // Add this function to calculate price change since listing
+  const calculatePriceChangeSinceListed = (coin: Coin) => {
+    if (!coin.priceAtListed || coin.priceAtListed === 0) {
+      return { change: '-', percentage: '-' };
+    }
+    const change = coin.day.price - coin.priceAtListed;
+    const percentage = ((change / coin.priceAtListed) * 100).toFixed(2);
+    return {
+      change: change.toFixed(8),
+      percentage: `${percentage}%`
+    };
+  };
+
   return (
-    <div className="bg-gray-100 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-8xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+    <div className="bg-gray-100 min-h-screen py-8 px-4 sm:py-12 sm:px-6 lg:px-8">
+      <div className="max-w-full mx-auto">
+        <div className="flex flex-col space-y-6 sm:flex-row sm:justify-between sm:items-center mb-8">
           <div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Moonshot Listing Coins</h1>
-            <p className="text-lg text-gray-600">This website has no affiliation with Moonshot. It is a simple listing tracker for the Moonshot API.</p>
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2 sm:mb-4">Moonshot Listing Coins</h1>
+            <p className="text-sm sm:text-lg text-gray-600">This website has no affiliation with Moonshot App</p>
           </div>
-          <div className="flex items-center space-x-4">
-            <TwitterShareButton
-              url="https://moonshot.umi.cat/"
-              options={{ text: 'Check out new listings on Moonshot' }}
-            />
-            <TwitterFollowButton screenName="Geniusumi9" />
+          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+            <div className="flex space-x-2">
+              <TwitterShareButton
+                url={typeof window !== 'undefined' ? window.location.href : ''}
+                options={{ text: 'Check out new listings on Moonshot' }}
+              />
+              <TwitterFollowButton screenName="Geniusumi9" />
+            </div>
             <button
               onClick={() => setDisplayMode(displayMode === 'table' ? 'sections' : 'table')}
-              className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-200"
+              className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-200 text-sm sm:text-base"
             >
               {displayMode === 'table' ? (
                 <>
                   <ListBulletIcon className="h-5 w-5 mr-2" />
-                  Switch to Sections
+                  <span className="hidden sm:inline">Switch to Sections</span>
+                  <span className="sm:hidden">Sections</span>
                 </>
               ) : (
                 <>
                   <TableCellsIcon className="h-5 w-5 mr-2" />
-                  Switch to Table
+                  <span className="hidden sm:inline">Switch to Table</span>
+                  <span className="sm:hidden">Table</span>
                 </>
               )}
             </button>
@@ -197,17 +222,17 @@ const TrendingCoins = () => {
                 className="bg-white rounded-lg shadow-md overflow-hidden"
               >
                 <div className="overflow-x-auto">
-                  <table className="w-full">
+                  <table className="w-full table-auto">
                     <thead className="bg-gray-50">
                       <tr>
                         <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Coin</th>
-                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Price /<br></br> Market Cap</th>
                         <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">24h Change</th>
                         <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Volume</th>
-                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Market Cap</th>
                         <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Contract Address</th>
                         <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Created At</th>
                         <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Listed At</th>
+                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Price At Listed /<br></br> Price Since Listed</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
@@ -238,7 +263,7 @@ const TrendingCoins = () => {
                                 </div>
                                 <div className="text-sm text-gray-500">{coin.name}</div>
                                 <div className="flex flex-wrap gap-1 mt-1">
-                                  {getTagsForCoin(coin.id).map((tag, index) => (
+                                  {getTagsForCoin(coin).map((tag, index) => (
                                     <span 
                                       key={index} 
                                       className={`inline-block px-2 py-1 text-xs font-semibold text-white ${getColorForTag(tag)} rounded-full`}
@@ -252,6 +277,7 @@ const TrendingCoins = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-base text-gray-900">${coin.day.price.toFixed(8)}</div>
+                            <div className="text-sm text-gray-500">${formatMarketCap(coin)}</div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className={`text-sm ${coin.day.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
@@ -260,9 +286,6 @@ const TrendingCoins = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-sm text-gray-900">${coin.day.volume.toLocaleString()}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">${formatMarketCap(coin)}</div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-sm text-gray-900">
@@ -302,6 +325,14 @@ const TrendingCoins = () => {
                                 minute: '2-digit',
                                 hour12: true
                               })}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">
+                              ${coin.priceAtListed ? coin.priceAtListed.toFixed(8) : '-'}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {calculatePriceChangeSinceListed(coin).change} / {calculatePriceChangeSinceListed(coin).percentage}
                             </div>
                           </td>
                         </tr>
@@ -347,121 +378,125 @@ const TrendingCoins = () => {
                           initial="hidden"
                           animate="visible"
                           exit="exit"
-                          className="overflow-hidden"
+                          className="overflow-x-auto"
                         >
-                          <div className="overflow-x-auto">
-                            <table className="min-w-full">
-                              <thead className="bg-gray-50">
-                                <tr>
-                                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Coin</th>
-                                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">24h Change</th>
-                                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Volume</th>
-                                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Market Cap</th>
-                                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contract Address</th>
-                                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
-                                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Listed At</th>
-                                </tr>
-                              </thead>
-                              <tbody className="divide-y divide-gray-200">
-                                {section.coins.slice(0, 10).map((coin) => (
-                                  <tr 
-                                    key={coin.id} 
-                                    className={`hover:bg-gray-50 transition-colors duration-200 ${
-                                      isWithinLast24Hours(coin.listedAt) ? 'bg-yellow-50' : ''
-                                    }`}
-                                  >
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                      <div className="flex items-center">
-                                        <Image
-                                          src={coin.imageUrl}
-                                          alt={coin.name}
-                                          width={32}
-                                          height={32}
-                                          className="rounded-full"
-                                        />
-                                        <div className="ml-4">
-                                          <div className="text-sm font-medium text-gray-900">
-                                            {coin.ticker}
-                                            {isWithinLast24Hours(coin.listedAt) && (
-                                              <span className="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                New
-                                              </span>
-                                            )}
-                                          </div>
-                                          <div className="text-sm text-gray-500">{coin.name}</div>
-                                          <div className="flex flex-wrap gap-1 mt-1">
-                                            {getTagsForCoin(coin.id).map((tag, index) => (
-                                              <span 
-                                                key={index} 
-                                                className={`inline-block px-2 py-1 text-xs font-semibold text-white ${getColorForTag(tag)} rounded-full`}
-                                              >
-                                                {tag}
-                                              </span>
-                                            ))}
-                                          </div>
+                          <table className="w-full table-auto">
+                            <thead className="bg-gray-50">
+                              <tr>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Coin</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price / Market Cap</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">24h Change</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Volume</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contract Address</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Listed At</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price At Listed / Price Since Listed</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-200">
+                              {section.coins.slice(0, 10).map((coin) => (
+                                <tr 
+                                  key={coin.id} 
+                                  className={`hover:bg-gray-50 transition-colors duration-200 ${
+                                    isWithinLast24Hours(coin.listedAt) ? 'bg-yellow-50' : ''
+                                  }`}
+                                >
+                                  <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="flex items-center">
+                                      <Image
+                                        src={coin.imageUrl}
+                                        alt={coin.name}
+                                        width={32}
+                                        height={32}
+                                        className="rounded-full"
+                                      />
+                                      <div className="ml-4">
+                                        <div className="text-sm font-medium text-gray-900">
+                                          {coin.ticker}
+                                          {isWithinLast24Hours(coin.listedAt) && (
+                                            <span className="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                              New
+                                            </span>
+                                          )}
+                                        </div>
+                                        <div className="text-sm text-gray-500">{coin.name}</div>
+                                        <div className="flex flex-wrap gap-1 mt-1">
+                                          {getTagsForCoin(coin).map((tag, index) => (
+                                            <span 
+                                              key={index} 
+                                              className={`inline-block px-2 py-1 text-xs font-semibold text-white ${getColorForTag(tag)} rounded-full`}
+                                            >
+                                              {tag}
+                                            </span>
+                                          ))}
                                         </div>
                                       </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                      <div className="text-sm text-gray-900">${coin.day.price.toFixed(8)}</div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                      <div className={`text-sm ${coin.day.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                        {coin.day.change >= 0 ? '▲' : '▼'} {Math.abs(coin.day.change).toFixed(2)}%
-                                      </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                      <div className="text-sm text-gray-900">${coin.day.volume.toLocaleString()}</div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                      <div className="text-sm text-gray-900">${formatMarketCap(coin)}</div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                      <div className="text-sm text-gray-900">
-                                        {coin.chain === 'solana' ? (
-                                          <a
-                                            href={`https://solscan.io/token/${coin.contractAddress}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-blue-600 hover:text-blue-800"
-                                          >
-                                            {`${coin.contractAddress.slice(0, 6)}...${coin.contractAddress.slice(-4)}`}
-                                          </a>
-                                        ) : (
-                                          'N/A'
-                                        )}
-                                      </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                      <div className="text-sm text-gray-500">
-                                        {new Date(coin.createdAt).toLocaleString(undefined, {
-                                          year: 'numeric',
-                                          month: 'short',
-                                          day: 'numeric',
-                                          hour: '2-digit',
-                                          minute: '2-digit',
-                                          hour12: true
-                                        })}
-                                      </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                      <div className="text-sm text-gray-500">
-                                        {new Date(coin.listedAt).toLocaleString(undefined, {
-                                          year: 'numeric',
-                                          month: 'short',
-                                          day: 'numeric',
-                                          hour: '2-digit',
-                                          minute: '2-digit',
-                                          hour12: true
-                                        })}
-                                      </div>
-                                    </td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
+                                    </div>
+                                  </td>
+                                  <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="text-sm text-gray-900">${coin.day.price.toFixed(8)}</div>
+                                    <div className="text-sm text-gray-500">${formatMarketCap(coin)}</div>
+                                  </td>
+                                  <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className={`text-sm ${coin.day.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                      {coin.day.change >= 0 ? '▲' : '▼'} {Math.abs(coin.day.change).toFixed(2)}%
+                                    </div>
+                                  </td>
+                                  <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="text-sm text-gray-900">${coin.day.volume.toLocaleString()}</div>
+                                  </td>
+                                  <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="text-sm text-gray-900">
+                                      {coin.chain === 'solana' ? (
+                                        <a
+                                          href={`https://solscan.io/token/${coin.contractAddress}`}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="text-blue-600 hover:text-blue-800"
+                                        >
+                                          {`${coin.contractAddress.slice(0, 6)}...${coin.contractAddress.slice(-4)}`}
+                                        </a>
+                                      ) : (
+                                        'N/A'
+                                      )}
+                                    </div>
+                                  </td>
+                                  <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="text-sm text-gray-500">
+                                      {new Date(coin.createdAt).toLocaleString(undefined, {
+                                        year: 'numeric',
+                                        month: 'short',
+                                        day: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        hour12: true
+                                      })}
+                                    </div>
+                                  </td>
+                                  <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="text-sm text-gray-500">
+                                      {new Date(coin.listedAt).toLocaleString(undefined, {
+                                        year: 'numeric',
+                                        month: 'short',
+                                        day: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        hour12: true
+                                      })}
+                                    </div>
+                                  </td>
+                                  <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="text-sm text-gray-900">
+                                      ${coin.priceAtListed ? coin.priceAtListed.toFixed(8) : '-'}
+                                    </div>
+                                    <div className="text-sm text-gray-500">
+                                      {calculatePriceChangeSinceListed(coin).change} / {calculatePriceChangeSinceListed(coin).percentage}
+                                    </div>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
                         </motion.div>
                       )}
                     </AnimatePresence>

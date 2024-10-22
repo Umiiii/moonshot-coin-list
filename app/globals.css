@@ -25,3 +25,23 @@ body {
     text-wrap: balance;
   }
 }
+
+/* Add these animations to your global CSS file */
+@keyframes moveLine1 {
+  0% { transform: translateY(-100%) rotate(-45deg); }
+  100% { transform: translateY(100%) rotate(-45deg); }
+}
+
+@keyframes moveLine2 {
+  0% { transform: translateY(-100%) rotate(45deg); }
+  100% { transform: translateY(100%) rotate(45deg); }
+}
+
+.animate-line-1 {
+  animation: moveLine1 3s linear infinite;
+}
+
+.animate-line-2 {
+  animation: moveLine2 3s linear infinite;
+  animation-delay: 1.5s;
+}

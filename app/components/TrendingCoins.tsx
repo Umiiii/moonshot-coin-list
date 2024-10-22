@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { useState, useEffect, useMemo } from 'react';
 import { ChevronDownIcon, TableCellsIcon, ListBulletIcon } from '@heroicons/react/24/solid';
 import { motion, AnimatePresence } from 'framer-motion';
+import { TwitterShareButton, TwitterFollowButton } from 'react-twitter-embed';
 
 interface Coin {
   id: string;
@@ -149,22 +150,29 @@ const TrendingCoins = () => {
             <h1 className="text-4xl font-bold text-gray-900 mb-4">Moonshot Listing Coins</h1>
             <p className="text-lg text-gray-600">This website has no affiliation with Moonshot. It is a simple listing tracker for the Moonshot API.</p>
           </div>
-          <button
-            onClick={() => setDisplayMode(displayMode === 'table' ? 'sections' : 'table')}
-            className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-200"
-          >
-            {displayMode === 'table' ? (
-              <>
-                <ListBulletIcon className="h-5 w-5 mr-2" />
-                Switch to Sections
-              </>
-            ) : (
-              <>
-                <TableCellsIcon className="h-5 w-5 mr-2" />
-                Switch to Table
-              </>
-            )}
-          </button>
+          <div className="flex items-center space-x-4">
+            <TwitterShareButton
+              url={window.location.href}
+              options={{ text: 'Check out new listings on Moonshot!' }}
+            />
+            <TwitterFollowButton screenName="Geniusumi9" />
+            <button
+              onClick={() => setDisplayMode(displayMode === 'table' ? 'sections' : 'table')}
+              className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-200"
+            >
+              {displayMode === 'table' ? (
+                <>
+                  <ListBulletIcon className="h-5 w-5 mr-2" />
+                  Switch to Sections
+                </>
+              ) : (
+                <>
+                  <TableCellsIcon className="h-5 w-5 mr-2" />
+                  Switch to Table
+                </>
+              )}
+            </button>
+          </div>
         </div>
         
         {isLoading ? (

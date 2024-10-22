@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { ChevronDownIcon, TableCellsIcon, ListBulletIcon, InformationCircleIcon } from '@heroicons/react/24/solid';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TwitterShareButton, TwitterFollowButton } from 'react-twitter-embed';
+import { sendGTMEvent } from '@next/third-parties/google';
 
 interface Coin {
   id: string;
@@ -12,6 +13,8 @@ interface Coin {
   imageUrl: string;
   decimals: number;
   circulatingSupply: number;
+  description: string;
+  twitter: string;
   chain: string;
   contractAddress: string;
   day: {
@@ -126,7 +129,11 @@ const TrendingCoins = () => {
   };
 
   const toggleSection = (sectionId: string) => {
-    setFoldedSections(prev => ({ ...prev, [sectionId]: !prev[sectionId] }));
+    setFoldedSections(prev => {
+      const newState = { ...prev, [sectionId]: !prev[sectionId] };
+      sendGTMEvent({ event: 'toggleSection', sectionId, newState: newState[sectionId] ? 'expanded' : 'collapsed' });
+      return newState;
+    });
   };
 
   const sectionVariants = {
@@ -252,7 +259,10 @@ const TrendingCoins = () => {
               <TwitterFollowButton screenName="Geniusumi9" />
             </div>
             <button
-              onClick={() => setDisplayMode(displayMode === 'table' ? 'sections' : 'table')}
+              onClick={() => {
+                setDisplayMode(displayMode === 'table' ? 'sections' : 'table');
+                sendGTMEvent({ event: 'switchDisplayMode', newMode: displayMode === 'table' ? 'sections' : 'table' });
+              }}
               className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-200 text-sm sm:text-base"
             >
               {displayMode === 'table' ? (
@@ -385,6 +395,7 @@ const TrendingCoins = () => {
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="text-blue-600 hover:text-blue-800"
+                                  onClick={() => sendGTMEvent({ event: 'clickContractAddress', coinId: coin.id, contractAddress: coin.contractAddress })}
                                 >
                                   {`${coin.contractAddress.slice(0, 6)}...${coin.contractAddress.slice(-4)}`}
                                 </a>
@@ -553,6 +564,7 @@ const TrendingCoins = () => {
                                           target="_blank"
                                           rel="noopener noreferrer"
                                           className="text-blue-600 hover:text-blue-800"
+                                          onClick={() => sendGTMEvent({ event: 'clickContractAddress', coinId: coin.id, contractAddress: coin.contractAddress })}
                                         >
                                           {`${coin.contractAddress.slice(0, 6)}...${coin.contractAddress.slice(-4)}`}
                                         </a>

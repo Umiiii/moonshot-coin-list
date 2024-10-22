@@ -533,9 +533,9 @@ const TrendingCoins = () => {
                                     <div className="text-sm text-gray-900">
                                       ${coin.priceAtListed ? coin.priceAtListed.toFixed(8) : '-'}
                                     </div>
-                                    <div className={`text-sm ${calculatePriceChangeSinceListed(coin).change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                                      {calculatePriceChangeSinceListed(coin).change} / {calculatePriceChangeSinceListed(coin).percentage}
-                                    </div>
+                                    <div className={`text-sm ${calculatePriceChangeSinceListed(coin).change !== null && parseFloat(calculatePriceChangeSinceListed(coin).change) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                              ${calculatePriceChangeSinceListed(coin).change !== null ? `${calculatePriceChangeSinceListed(coin).change} / ${calculatePriceChangeSinceListed(coin).percentage}` : '-'}
+                            </div>
                                   </td>
                                   <td className="px-6 py-4 whitespace-nowrap">
                                     <div className={`text-sm ${coin.day.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>

@@ -88,6 +88,14 @@ const TrendingCoins = () => {
     {
       "mint_address": "H7ed7UgcLp3ax4X1CQ5WuWDn6d1pprfMMYiv5ejwLWWU",
       "token_price_usd": 0.0000314086181344591
+    },
+    {
+      "mint_address": "GVwpWU5PtJFHS1mH35sHmsRN1XWUwRV3Qo94h5Lepump",
+      "token_price_usd": 0.013878424360888465
+    },
+    {
+      "mint_address": "BoAQaykj3LtkM2Brevc7cQcRAzpqcsP47nJ2rkyopump",
+      "token_price_usd": 0.014550414894622981
     }
   ];
   useEffect(() => {
@@ -197,8 +205,12 @@ const TrendingCoins = () => {
     });
 
 
-    //let output = [];
+    // let output = [];
     // for (const coin of coinMap.values()) {
+    //  // console.log(coin);
+    //   if (coin.ticker !== 'FOREST' && coin.ticker !== 'CATGF') {
+    //     continue;
+    //   }
     //   const listedAt = new Date(coin.listedAt);
     //   const tenMinutesAgo = new Date(listedAt.getTime() - 10 * 60 * 1000);
     //   const oneMinuteAgo = new Date(listedAt.getTime() - 1 * 60 * 1000);

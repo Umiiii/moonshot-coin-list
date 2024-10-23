@@ -42,14 +42,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      
+      <GoogleTagManager gtmId="G-151Q41BT6K" />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
       </body>
       <GoogleAnalytics gaId="G-151Q41BT6K" />
-      <GoogleTagManager gtmId="GTM-55RXN8PQ" />
+      
     </html>
   );
 }

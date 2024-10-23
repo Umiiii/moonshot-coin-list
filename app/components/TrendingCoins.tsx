@@ -1,11 +1,12 @@
 "use client";
 import Image from 'next/image';
 import { useState, useEffect, useMemo } from 'react';
-import { ChevronDownIcon, TableCellsIcon, ListBulletIcon, InformationCircleIcon } from '@heroicons/react/24/solid';
+import { ChevronDownIcon, TableCellsIcon, ListBulletIcon, InformationCircleIcon, ClipboardDocumentIcon } from '@heroicons/react/24/solid';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TwitterShareButton, TwitterFollowButton } from 'react-twitter-embed';
-import { sendGTMEvent } from '@next/third-parties/google';
+import { sendGAEvent } from '@next/third-parties/google';
 import { FaTwitter } from 'react-icons/fa'; // Add this import for the Twitter icon
+import toast, { Toaster } from 'react-hot-toast';
 
 interface Coin {
   id: string;
@@ -140,7 +141,7 @@ const TrendingCoins = () => {
   const toggleSection = (sectionId: string) => {
     setFoldedSections(prev => {
       const newState = { ...prev, [sectionId]: !prev[sectionId] };
-      sendGTMEvent({ event: 'toggleSection', sectionId, newState: newState[sectionId] ? 'expanded' : 'collapsed' });
+      sendGAEvent({ event: 'toggleSection', sectionId, newState: newState[sectionId] ? 'expanded' : 'collapsed' });
       return newState;
     });
   };
@@ -255,8 +256,20 @@ const TrendingCoins = () => {
     };
   };
 
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      toast.success('Contract address copied to clipboard!', {
+        duration: 2000,
+        position: 'bottom-center',
+        icon: '📋',
+      });
+      sendGAEvent({ event: 'copyContractAddress', contractAddress: text });
+    });
+  };
+
   return (
     <div className="bg-gray-100 min-h-screen py-8 px-4 sm:py-12 sm:px-6 lg:px-8">
+      <Toaster /> {/* Add this line to render the toast container */}
       <div className="max-w-full mx-auto">
         <div className="flex flex-col space-y-6 sm:flex-row sm:justify-between sm:items-center mb-8">
           <div>
@@ -274,7 +287,7 @@ const TrendingCoins = () => {
             <button
               onClick={() => {
                 setDisplayMode(displayMode === 'table' ? 'sections' : 'table');
-                sendGTMEvent({ event: 'switchDisplayMode', newMode: displayMode === 'table' ? 'sections' : 'table' });
+                sendGAEvent({ event: 'switchDisplayMode', newMode: displayMode === 'table' ? 'sections' : 'table' });
               }}
               className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-200 text-sm sm:text-base"
             >
@@ -316,150 +329,164 @@ const TrendingCoins = () => {
                 exit="exit"
                 className="bg-white rounded-lg shadow-md overflow-hidden"
               >
-                <div className="overflow-x-auto">
-                  <table className="w-full table-auto">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Coin</th>
-                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Price /<br></br> Market Cap</th>
-                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                          <div className="flex items-center">
-                            Price At Listed /<br></br> Price Since Listed
-                            <div className="relative ml-1 group">
-                              <InformationCircleIcon className="h-5 w-5 text-gray-400 cursor-help" />
-                              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                                The average price 10 minutes before listing
-                              </div>
-                            </div>
-                          </div>
-                        </th>
-                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">24h Change</th>
-                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Volume</th>
-                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Contract Address</th>
-                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Created At</th>
-                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Listed At</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                      {allCoins.map((coin) => (
-                        <tr 
-                          key={coin.id} 
-                          className={`hover:bg-gray-50 transition-colors duration-200 ${
-                            isWithinLast24Hours(coin.listedAt) ? 'bg-yellow-50' : ''
-                          }`}
-                        >
-                          <td className="px-6 py-4">
-                            <div className="flex items-start">
-                              <Image
-                                src={coin.imageUrl}
-                                alt={coin.name}
-                                width={40}
-                                height={40}
-                                className="rounded-full"
-                              />
-                              <div className="ml-4">
-                                <div className="text-base font-medium text-gray-900">
-                                  <strong>{coin.ticker}</strong>
-                                  {isWithinLast24Hours(coin.listedAt) && (
-                                    <span className="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                      Listed in recent 24 hours
-                                    </span>
-                                  )}
-                                </div>
-                                <div className="text-sm text-gray-800">{coin.name}</div>
-                                {coin.twitter && (
-                                  <a
-                                    href={`https://twitter.com/${coin.twitter}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-blue-500 hover:text-blue-700 inline-flex items-center mt-1"
-                                    onClick={() => sendGTMEvent({ event: 'clickTwitterLink', coinId: coin.id, twitterHandle: coin.twitter })}
-                                  >
-                                    <FaTwitter className="mr-1" />
-                                    @{coin.twitter}
-                                  </a>
-                                )}
-                                <div className="text-xs text-gray-500 mt-1 max-w-xs whitespace-normal">
-                                  {coin.description}
-                                </div>
-                                <div className="flex flex-wrap gap-1 mt-1">
-                                  {getTagsForCoin(coin).map((tag, index) => (
-                                    <span 
-                                      key={index} 
-                                      className={`inline-block px-2 py-1 text-xs font-semibold text-white ${getColorForTag(tag)} rounded-full`}
-                                    >
-                                      {tag}
-                                    </span>
-                                  ))}
+                <div className="relative overflow-x-auto">
+                  <div className="max-h-[calc(100vh-200px)] overflow-y-auto">
+                    <table className="w-full table-auto">
+                      <thead className="bg-gray-50 sticky top-0 z-20">
+                        <tr>
+                          <th className="sticky left-0 z-30 bg-gray-50 px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Coin</th>
+                          <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Price /<br></br> Market Cap /<br></br> Holders</th>
+                          <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            <div className="flex items-center">
+                              Price At Listed /<br></br> Price Since Listed
+                              <div className="relative ml-1 group">
+                                <InformationCircleIcon className="h-5 w-5 text-gray-400 cursor-help" />
+                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                                  The average price 10 minutes before listing
                                 </div>
                               </div>
                             </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-base text-gray-800">${coin.day.price.toFixed(8)}</div>
-                            <div className="text-sm text-gray-500">${formatMarketCap(coin)}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-base text-gray-800">
-                              ${coin.priceAtListed ? coin.priceAtListed.toFixed(8) : '-'}
-                            </div>
-                            <div className={`text-sm ${calculatePriceChangeSinceListed(coin).change !== null && parseFloat(calculatePriceChangeSinceListed(coin).change) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                              ${calculatePriceChangeSinceListed(coin).change !== null ? `${calculatePriceChangeSinceListed(coin).change} / ${calculatePriceChangeSinceListed(coin).percentage}` : '-'}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className={`text-sm ${coin.day.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                              {coin.day.change >= 0 ? '▲' : '▼'} {Math.abs(coin.day.change).toFixed(2)}%
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">${coin.day.volume.toLocaleString()}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">
-                              {coin.chain === 'solana' ? (
-                                <a
-                                  href={`https://solscan.io/token/${coin.contractAddress}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-blue-600 hover:text-blue-800"
-                                  onClick={() => sendGTMEvent({ event: 'clickContractAddress', coinId: coin.id, contractAddress: coin.contractAddress })}
-                                >
-                                  {`${coin.contractAddress.slice(0, 6)}...${coin.contractAddress.slice(-4)}`}
-                                </a>
-                              ) : (
-                                'N/A'
-                              )}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-500">
-                              {new Date(coin.createdAt).toLocaleString(undefined, {
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                hour12: true
-                              })}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-500">
-                              {new Date(coin.listedAt).toLocaleString(undefined, {
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                hour12: true
-                              })}
-                            </div>
-                          </td>
+                          </th>
+                          <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">24h Change</th>
+                          <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Volume</th>
+                          <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Contract Address</th>
+                          <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+                          <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Listed At</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200">
+                        {allCoins.map((coin) => (
+                          <tr 
+                            key={coin.id} 
+                            className={`hover:bg-gray-50 transition-colors duration-200 ${
+                              isWithinLast24Hours(coin.listedAt) ? 'bg-yellow-50' : ''
+                            }`}
+                          >
+                            <td className={`sticky left-0 z-10 bg-white px-6 py-4 ${
+                              isWithinLast24Hours(coin.listedAt) ? 'bg-yellow-50' : ''
+                            }`}>
+                              <div className="flex items-start ">
+                                <Image
+                                  src={coin.imageUrl}
+                                  alt={coin.name}
+                                  width={40}
+                                  height={40}
+                                  className="rounded-full"
+                                />
+                                <div className="ml-4">
+                                  <div className={`text-base font-medium text-gray-900`}>
+                                    <strong>{coin.ticker}</strong>
+                                    {isWithinLast24Hours(coin.listedAt) && (
+                                      <span className="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        Recent listing
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="text-sm text-gray-800">{coin.name}</div>
+                                  {coin.twitter && (
+                                    <a
+                                      href={`https://twitter.com/${coin.twitter}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-blue-500 hover:text-blue-700 inline-flex items-center mt-1 hidden sm:inline-flex"
+                                      onClick={() => sendGAEvent({ event: 'clickTwitterLink', coinId: coin.id, twitterHandle: coin.twitter })}
+                                    >
+                                      <FaTwitter className="mr-1" />
+                                      @{coin.twitter}
+                                    </a>
+                                  )}
+                                  <div className="text-xs text-gray-500 mt-1 max-w-xs whitespace-normal hidden sm:block">
+                                    {coin.description}
+                                  </div>
+                                  <div className="flex flex-wrap gap-1 mt-1 hidden sm:flex">
+                                    {getTagsForCoin(coin).map((tag, index) => (
+                                      <span 
+                                        key={index} 
+                                        className={`inline-block px-2 py-1 text-xs font-semibold text-white ${getColorForTag(tag)} rounded-full`}
+                                      >
+                                        {tag}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-base text-gray-800">${coin.day.price.toFixed(8)}</div>
+                              <div className="text-sm text-gray-500">${formatMarketCap(coin)}</div>
+                              <div className="text-sm text-gray-500">{coin.day.holders} holders</div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-base text-gray-800">
+                                ${coin.priceAtListed ? coin.priceAtListed.toFixed(8) : '-'}
+                              </div>
+                              <div className={`text-sm ${calculatePriceChangeSinceListed(coin).change !== null && parseFloat(calculatePriceChangeSinceListed(coin).change) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                ${calculatePriceChangeSinceListed(coin).change !== null ? `${calculatePriceChangeSinceListed(coin).change} / ${calculatePriceChangeSinceListed(coin).percentage}` : '-'}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className={`text-sm ${coin.day.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                {coin.day.change >= 0 ? '▲' : '▼'} {Math.abs(coin.day.change).toFixed(2)}%
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-gray-900">${coin.day.volume.toLocaleString()}</div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-gray-900 flex items-center">
+                                {coin.chain === 'solana' ? (
+                                  <>
+                                    <a
+                                      href={`https://solscan.io/token/${coin.contractAddress}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-blue-600 hover:text-blue-800 mr-2"
+                                      onClick={() => sendGAEvent({ event: 'clickContractAddress', coinId: coin.id, contractAddress: coin.contractAddress })}
+                                    >
+                                      {`${coin.contractAddress.slice(0, 6)}...${coin.contractAddress.slice(-4)}`}
+                                    </a>
+                                    <button
+                                      onClick={() => copyToClipboard(coin.contractAddress)}
+                                      className="text-gray-400 hover:text-gray-600"
+                                      title="Copy contract address"
+                                    >
+                                      <ClipboardDocumentIcon className="h-5 w-5" />
+                                    </button>
+                                  </>
+                                ) : (
+                                  'N/A'
+                                )}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-gray-500">
+                                {new Date(coin.createdAt).toLocaleString(undefined, {
+                                  year: 'numeric',
+                                  month: 'short',
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                  hour12: true
+                                })}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-gray-500">
+                                {new Date(coin.listedAt).toLocaleString(undefined, {
+                                  year: 'numeric',
+                                  month: 'short',
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                  hour12: true
+                                })}
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </motion.div>
             ) : (
@@ -505,7 +532,7 @@ const TrendingCoins = () => {
                             <thead className="bg-gray-50">
                               <tr>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Coin</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price / Market Cap</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price / Market Cap / Holders</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                   <div className="flex items-center">
                                     Price At Listed / Price Since Listed
@@ -542,11 +569,13 @@ const TrendingCoins = () => {
                                         className="rounded-full"
                                       />
                                       <div className="ml-4">
-                                        <div className="text-sm font-medium text-gray-900">
+                                        <div className={`text-sm font-medium text-gray-900 ${
+                                          isWithinLast24Hours(coin.listedAt) ? 'bg-yellow-50' : ''
+                                        }`}>
                                           <strong>{coin.ticker}</strong>
                                           {isWithinLast24Hours(coin.listedAt) && (
                                             <span className="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                              New
+                                              Recent listing
                                             </span>
                                           )}
                                         </div>
@@ -556,17 +585,17 @@ const TrendingCoins = () => {
                                             href={`https://twitter.com/${coin.twitter}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="text-blue-500 hover:text-blue-700 inline-flex items-center mt-1"
-                                            onClick={() => sendGTMEvent({ event: 'clickTwitterLink', coinId: coin.id, twitterHandle: coin.twitter })}
+                                            className="text-blue-500 hover:text-blue-700 inline-flex items-center mt-1 hidden sm:inline-flex"
+                                            onClick={() => sendGAEvent({ event: 'clickTwitterLink', coinId: coin.id, twitterHandle: coin.twitter })}
                                           >
                                             <FaTwitter className="mr-1" />
                                             @{coin.twitter}
                                           </a>
                                         )}
-                                        <div className="text-xs text-gray-500 mt-1 max-w-xs whitespace-normal">
+                                        <div className="text-xs text-gray-500 mt-1 max-w-xs whitespace-normal hidden sm:block">
                                           {coin.description}
                                         </div>
-                                        <div className="flex flex-wrap gap-1 mt-1">
+                                        <div className="flex flex-wrap gap-1 mt-1 hidden sm:flex">
                                           {getTagsForCoin(coin).map((tag, index) => (
                                             <span 
                                               key={index} 
@@ -582,6 +611,7 @@ const TrendingCoins = () => {
                                   <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="text-sm text-gray-900">${coin.day.price.toFixed(8)}</div>
                                     <div className="text-sm text-gray-500">${formatMarketCap(coin)}</div>
+                                    <div className="text-sm text-gray-500">{coin.day.holders} holders</div>
                                   </td>
                                   <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="text-sm text-gray-900">
@@ -600,17 +630,26 @@ const TrendingCoins = () => {
                                     <div className="text-sm text-gray-900">${coin.day.volume.toLocaleString()}</div>
                                   </td>
                                   <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="text-sm text-gray-900">
+                                    <div className="text-sm text-gray-900 flex items-center">
                                       {coin.chain === 'solana' ? (
-                                        <a
-                                          href={`https://solscan.io/token/${coin.contractAddress}`}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          className="text-blue-600 hover:text-blue-800"
-                                          onClick={() => sendGTMEvent({ event: 'clickContractAddress', coinId: coin.id, contractAddress: coin.contractAddress })}
-                                        >
-                                          {`${coin.contractAddress.slice(0, 6)}...${coin.contractAddress.slice(-4)}`}
-                                        </a>
+                                        <>
+                                          <a
+                                            href={`https://solscan.io/token/${coin.contractAddress}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-600 hover:text-blue-800 mr-2"
+                                            onClick={() => sendGAEvent({ event: 'clickContractAddress', coinId: coin.id, contractAddress: coin.contractAddress })}
+                                          >
+                                            {`${coin.contractAddress.slice(0, 6)}...${coin.contractAddress.slice(-4)}`}
+                                          </a>
+                                          <button
+                                            onClick={() => copyToClipboard(coin.contractAddress)}
+                                            className="text-gray-400 hover:text-gray-600"
+                                            title="Copy contract address"
+                                          >
+                                            <ClipboardDocumentIcon className="h-5 w-5" />
+                                          </button>
+                                        </>
                                       ) : (
                                         'N/A'
                                       )}

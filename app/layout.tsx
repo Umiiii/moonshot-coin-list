@@ -16,12 +16,12 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Moonshot - Cryptocurrency Listing Tracker",
-  description: "Track trending cryptocurrencies, their prices, market caps, and more with Moonshot. Stay updated with the latest crypto market trends.",
-  keywords: "cryptocurrency, crypto tracker, blockchain, trending coins, market cap, crypto prices",
+  title: "Moonshot Listing Tracker",
+  description: "Track new listing cryptocurrencies, their prices, market caps, and more on Moonshot. Stay updated with the latest crypto market trends.",
+  keywords: "listing, cryptocurrency, crypto tracker, blockchain, trending coins, market cap, crypto prices, moonshot, solana, memecoins, meme coins, solana memecoins, solana meme coins, solana memecoin tracker, solana meme coin tracker, solana memecoin prices, solana meme coin prices, solana memecoin market cap, solana meme coin market cap",
   openGraph: {
     title: "Moonshot - Cryptocurrency Listing Tracker",
-    description: "Track trending cryptocurrencies, their prices, market caps, and more with Moonshot.",
+    description: "Track trending cryptocurrencies, their prices, market caps, and more on Moonshot.",
     type: "website",
     url: "https://moonshot.umi.cat", // Replace with your actual URL
    // image: "/og-image.jpg", // Add an Open Graph image (create this image and place it in the public folder)
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Moonshot - Cryptocurrency Listing Tracker",
-    description: "Track trending cryptocurrencies, their prices, market caps, and more with Moonshot.",
+    description: "Track trending cryptocurrencies, their prices, market caps, and more on Moonshot.",
    // image: "/twitter-image.jpg", // Add a Twitter card image (create this image and place it in the public folder)
   },
   robots: "index, follow"

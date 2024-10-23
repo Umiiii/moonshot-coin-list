@@ -7,6 +7,7 @@ import { TwitterShareButton, TwitterFollowButton } from 'react-twitter-embed';
 import { sendGAEvent } from '@next/third-parties/google';
 import { FaTwitter } from 'react-icons/fa'; // Add this import for the Twitter icon
 import toast, { Toaster } from 'react-hot-toast';
+import { track } from '@vercel/analytics';
 
 interface Coin {
   id: string;
@@ -279,7 +280,7 @@ const TrendingCoins = () => {
           <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
             <div className="flex space-x-2">
               <TwitterShareButton
-                url={typeof window !== 'undefined' ? window.location.href : ''}
+                url={'https://moonshot.umi.cat/?ref=home'}
                 options={{ text: 'Check out new listings on Moonshot' }}
               />
               <TwitterFollowButton screenName="Geniusumi9" />
@@ -288,6 +289,7 @@ const TrendingCoins = () => {
               onClick={() => {
                 setDisplayMode(displayMode === 'table' ? 'sections' : 'table');
                 sendGAEvent({ event: 'switchDisplayMode', newMode: displayMode === 'table' ? 'sections' : 'table' });
+                track('switchDisplayMode', { newMode: displayMode === 'table' ? 'sections' : 'table' });
               }}
               className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-200 text-sm sm:text-base"
             >
@@ -316,7 +318,12 @@ const TrendingCoins = () => {
             transition={{ duration: 0.5 }}
             className="flex justify-center items-center h-64"
           >
-            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+            <Image
+              src="/loading.png"
+              alt="Loading..."
+              width={512}
+              height={512}
+            />
           </motion.div>
         ) : (
           <AnimatePresence mode="wait">

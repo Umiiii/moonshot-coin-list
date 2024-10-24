@@ -276,7 +276,7 @@ const TrendingCoins = () => {
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2 sm:mb-4">Moonshot Listing Coins</h1>
             <p className="text-sm sm:text-lg text-gray-600">This website has no affiliation with <a href="https://moonshot.money?ref=CWq73Sx3vq" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-700">Moonshot App</a></p>
-            <p className="text-sm sm:text-lg text-gray-600">Don't FOMO</p>
+            <p className="text-sm sm:text-lg text-gray-600">Do not FOMO</p>
           </div>
           <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
             <div className="flex space-x-2">

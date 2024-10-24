@@ -275,7 +275,20 @@ const TrendingCoins = () => {
         <div className="flex flex-col space-y-6 sm:flex-row sm:justify-between sm:items-center mb-8">
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2 sm:mb-4">Moonshot Listing Coins</h1>
-            <p className="text-sm sm:text-lg text-gray-600">This website has no affiliation with <a href="https://moonshot.money?ref=CWq73Sx3vq" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-700">Moonshot App</a></p>
+            <p className="text-sm sm:text-lg text-gray-600">
+              This website has no affiliation with{' '}
+              <a
+                href="https://moonshot.money?ref=CWq73Sx3vq"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 hover:text-blue-700"
+                onClick={() => {
+                  track('moonshot_app_link_click', { location: 'header' });
+                }}
+              >
+                Moonshot App
+              </a>
+            </p>
             <p className="text-sm sm:text-lg text-gray-600">Do not FOMO</p>
           </div>
           <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">

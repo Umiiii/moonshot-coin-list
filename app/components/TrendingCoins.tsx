@@ -215,7 +215,7 @@ const TrendingCoins = () => {
     });
 
 
-    let output = [];
+    const output = [];
     for (const coin of Array.from(coinMap.values())) {
      // console.log(coin);
       // if (coin.ticker !== 'MARK' && coin.ticker !== 'CATGF') {

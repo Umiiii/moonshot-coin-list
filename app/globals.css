@@ -37,11 +37,62 @@ body {
   100% { transform: translateY(100%) rotate(45deg); }
 }
 
-.animate-line-1 {
-  animation: moveLine1 3s linear infinite;
+.highlight-row {
+  position: relative;
+  display:flex;
+
+  overflow: hidden;
+  border-radius: 4px; 
+
 }
 
-.animate-line-2 {
-  animation: moveLine2 3s linear infinite;
-  animation-delay: 1.5s;
+.highlight-row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 75%;
+
+  background-image: linear-gradient(
+    90deg,
+    rgb(0, 183, 255),
+    rgb(255, 48, 255),
+    rgb(0, 183, 255)
+  );
+  background-size: 200% 100%;
+  animation: moveGradient 5s linear infinite;
+  z-index: 1;
+  pointer-events: none;
+  transition: all 0.2s linear;
+
+}
+
+.highlight-row::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  background-color: white;
+  z-index: 2;
+  
+  border-radius:4px;
+
+}
+
+.highlight-row > * {
+  position: relative;
+  z-index: 3;
+}
+
+@keyframes moveGradient {
+  from {
+    transform: rotate(0deg);
+   }
+  
+   to {
+    transform: rotate(360deg);
+   }
+  
 }

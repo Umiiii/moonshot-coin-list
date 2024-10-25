@@ -384,16 +384,13 @@ const TrendingCoins = () => {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-200">
-                        {allCoins.map((coin) => (
+                        {allCoins.map((coin,index) => (
                           <tr 
                             key={coin.id} 
-                            className={`hover:bg-gray-50 transition-colors duration-200 ${
-                              isWithinLast24Hours(coin.listedAt) ? 'bg-yellow-50' : ''
-                            }`}
+                            className={`transition-colors duration-200`}
                           >
-                            <td className={`sticky left-0 z-10 bg-white px-6 py-4 ${
-                              isWithinLast24Hours(coin.listedAt) ? 'bg-yellow-50' : ''
-                            }`}>
+                            
+                            <td className={`sticky left-0 z-10 bg-white px-6 py-4 ${index === 0 && isWithinLast24Hours(coin.listedAt) ? 'highlight-row' : ''}`}>
                               <div className="flex items-start ">
                                 <Image
                                   src={coin.imageUrl}
@@ -584,9 +581,7 @@ const TrendingCoins = () => {
                               {section.coins.slice(0, 10).map((coin) => (
                                 <tr 
                                   key={coin.id} 
-                                  className={`hover:bg-gray-50 transition-colors duration-200 ${
-                                    isWithinLast24Hours(coin.listedAt) ? 'bg-yellow-50' : ''
-                                  }`}
+                                  className={`hover:bg-gray-50 transition-colors duration-200`}
                                 >
                                   <td className="px-6 py-4">
                                     <div className="flex items-start">
@@ -598,9 +593,7 @@ const TrendingCoins = () => {
                                         className="rounded-full"
                                       />
                                       <div className="ml-4">
-                                        <div className={`text-sm font-medium text-gray-900 ${
-                                          isWithinLast24Hours(coin.listedAt) ? 'bg-yellow-50' : ''
-                                        }`}>
+                                        <div className={`text-sm font-medium text-gray-900`}>
                                           <strong>{coin.ticker}</strong>
                                           {isWithinLast24Hours(coin.listedAt) && (
                                             <span className="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">

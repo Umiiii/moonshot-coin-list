@@ -44,62 +44,70 @@ const TrendingCoins = () => {
   const [displayMode, setDisplayMode] = useState<'table' | 'sections'>('table');
   const csvHistoryData = [
     {
-      "mint_address": "6JGSHS9GrE9uG8ix63w3DPMYHrgrJ6J4QyHbBhAepump",
-      "token_price_usd": 0.00159349921249322
-    },
-    {
-      "mint_address": "2zrH2jE542mzB4HABgBjdWMQPtNC5H12pwo1iLpfpump",
-      "token_price_usd": 0.005621915501925176
+      "mint_address": "HeJUFDxfJSzYFUuHLxkMqCgytU31G6mjP4wKviwqpump",
+      "token_price_usd": "0.03599154637526515"
     },
     {
       "mint_address": "qiaupfns561LJPudU2YL48S2mx1nbekrn8V4RrpyJG6",
-      "token_price_usd": 0.007705233186906984
-    },
-    {
-      "mint_address": "GJAFwWjJ3vnTsrQVabjBVK2TYB1YtRCQXRDfDgUnpump",
-      "token_price_usd": 0.020066650880012877
-    },
-    {
-      "mint_address": "J7tYmq2JnQPvxyhcXpCDrvJnc9R5ts8rv7tgVHDPsw7U",
-      "token_price_usd": 0.014801094410418575
-    },
-    {
-      "mint_address": "H2c31USxu35MDkBrGph8pUDUnmzo2e4Rf4hnvL2Upump",
-      "token_price_usd": 0.020364699127351244
-    },
-    {
-      "mint_address": "HeJUFDxfJSzYFUuHLxkMqCgytU31G6mjP4wKviwqpump",
-      "token_price_usd": 0.035991546375265145
-    },
-    {
-      "mint_address": "FqvtZ2UFR9we82Ni4LeacC1zyTiQ77usDo31DUokpump",
-      "token_price_usd": 0.035986293107104175
+      "token_price_usd": "0.007705233186906986"
     },
     {
       "mint_address": "CzLSujWBLFsSjncfkh59rUFqvafWcY5tzedWJSuypump",
-      "token_price_usd": 0.013949596970320995
-    },
-    {
-      "mint_address": "7iagMTDPfNSR5zVcERT1To7A9eaQoz58dJAh42EMHcCC",
-      "token_price_usd": 0.003844023290821382
-    },
-    {
-      "mint_address": "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump",
-      "token_price_usd": 0.02159479456224017
+      "token_price_usd": "0.013949596970320997"
     },
     {
       "mint_address": "H7ed7UgcLp3ax4X1CQ5WuWDn6d1pprfMMYiv5ejwLWWU",
-      "token_price_usd": 0.0000314086181344591
+      "token_price_usd": "0.00003140861813445909"
     },
     {
-      "mint_address": "GVwpWU5PtJFHS1mH35sHmsRN1XWUwRV3Qo94h5Lepump",
-      "token_price_usd": 0.013878424360888465
+      "mint_address": "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump",
+      "token_price_usd": "0.02159479456224017"
+    },
+    {
+      "mint_address": "2GPJhV9jNrj7TaLYMRgWkcy6sTKLcwntv7nZ7qDyMRGM",
+      "token_price_usd": "0.010046584558374485"
     },
     {
       "mint_address": "BoAQaykj3LtkM2Brevc7cQcRAzpqcsP47nJ2rkyopump",
-      "token_price_usd": 0.014550414894622981
+      "token_price_usd": "0.014376705332664075"
+    },
+    {
+      "mint_address": "Cy4DSbZW4CE6cG6HDqQFhXxpHTdm41SY9hBB1JG6pump",
+      "token_price_usd": "0.0039014835410562066"
+    },
+    {
+      "mint_address": "DEJiPKx5GActUtB6qUssreUxkhXtL4hTQAAJZ7Ccw8se",
+      "token_price_usd": "0.01608722425383271"
+    },
+    {
+      "mint_address": "GJAFwWjJ3vnTsrQVabjBVK2TYB1YtRCQXRDfDgUnpump",
+      "token_price_usd": "0.020066650880012887"
+    },
+    {
+      "mint_address": "J7tYmq2JnQPvxyhcXpCDrvJnc9R5ts8rv7tgVHDPsw7U",
+      "token_price_usd": "0.014801094410418577"
+    },
+    {
+      "mint_address": "H2c31USxu35MDkBrGph8pUDUnmzo2e4Rf4hnvL2Upump",
+      "token_price_usd": "0.020364699127351234"
+    },
+    {
+      "mint_address": "FqvtZ2UFR9we82Ni4LeacC1zyTiQ77usDo31DUokpump",
+      "token_price_usd": "0.035986293107104175"
+    },
+    {
+      "mint_address": "CCEmLiB7qJP59q5PbqHerP3th7bUAG9kPft9ePwYpump",
+      "token_price_usd": "0.010891144869376354"
+    },
+    {
+      "mint_address": "2zrH2jE542mzB4HABgBjdWMQPtNC5H12pwo1iLpfpump",
+      "token_price_usd": "0.005621915501925176"
+    },
+    {
+      "mint_address": "GVwpWU5PtJFHS1mH35sHmsRN1XWUwRV3Qo94h5Lepump",
+      "token_price_usd": "0.013029948483552977"
     }
-  ];
+   ];
   useEffect(() => {
     const fetchTrendingCoins = async () => {
       setIsLoading(true);
@@ -202,28 +210,28 @@ const TrendingCoins = () => {
     Array.from(coinMap.values()).forEach(coin => {
       const history = csvHistoryData.find(h => h.mint_address === coin.contractAddress);
       if (history) {
-        coin.priceAtListed = history.token_price_usd;
+        coin.priceAtListed = parseFloat(history.token_price_usd);
       }
     });
 
 
-    // let output = [];
-    // for (const coin of coinMap.values()) {
-    //  // console.log(coin);
-    //   if (coin.ticker !== 'FOREST' && coin.ticker !== 'CATGF') {
-    //     continue;
-    //   }
-    //   const listedAt = new Date(coin.listedAt);
-    //   const tenMinutesAgo = new Date(listedAt.getTime() - 10 * 60 * 1000);
-    //   const oneMinuteAgo = new Date(listedAt.getTime() - 1 * 60 * 1000);
+    let output = [];
+    for (const coin of Array.from(coinMap.values())) {
+     // console.log(coin);
+      // if (coin.ticker !== 'MARK' && coin.ticker !== 'CATGF') {
+      //   continue;
+      // }
+      const listedAt = new Date(coin.listedAt);
+      const tenMinutesAgo = new Date(listedAt.getTime() - 10 * 60 * 1000);
+      const oneMinuteAgo = new Date(listedAt.getTime() - 1 * 60 * 1000);
       
-    //   output.push("('"+
-    //     coin.contractAddress+ "', TIMESTAMP '"+ 
-    //     tenMinutesAgo.toISOString().replace('T', ' ').slice(0, 19) + "', TIMESTAMP '" +
-    //     oneMinuteAgo.toISOString().replace('T', ' ').slice(0, 19) + "')"
-    //   );
-    // }
-    // console.log(output.join(",\n"));
+      output.push("('"+
+        coin.contractAddress+ "', TIMESTAMP '"+ 
+        tenMinutesAgo.toISOString().replace('T', ' ').slice(0, 19) + "', TIMESTAMP '" +
+        oneMinuteAgo.toISOString().replace('T', ' ').slice(0, 19) + "')"
+      );
+    }
+    console.log(output.join(",\n"));
 
     return Array.from(coinMap.values())
       .sort((a, b) => new Date(b.listedAt).getTime() - new Date(a.listedAt).getTime());

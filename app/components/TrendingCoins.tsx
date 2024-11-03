@@ -106,6 +106,50 @@ const TrendingCoins = () => {
     {
       "mint_address": "GVwpWU5PtJFHS1mH35sHmsRN1XWUwRV3Qo94h5Lepump",
       "token_price_usd": "0.013029948483552977"
+    },
+    {
+      "mint_address": "CBdCxKo9QavR9hfShgpEBG3zekorAeD7W1jfq2o3pump",
+      "token_price_usd": "0.058874657864975400"
+    },
+    {
+      "mint_address": "ABDoiSudvFjjJ25rtXn8V2b6QGrH59KN6thAbsPvpump",
+      "token_price_usd": "0.005803377054110580"
+    },
+    {
+      "mint_address": "2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump",
+      "token_price_usd": "0.044531201094114500"
+    },
+    {
+      "mint_address": "6JGSHS9GrE9uG8ix63w3DPMYHrgrJ6J4QyHbBhAepump",
+      "token_price_usd": "0.001593499212493220"
+    },
+    {
+      "mint_address": "39qibQxVzemuZTEvjSB7NePhw9WyyHdQCqP8xmBMpump",
+      "token_price_usd": "0.035013207403630400"
+    },
+    {
+      "mint_address": "D8kgv5BRyfxUgTJGhkPJcw1Neo1eaneENC5XxC99pump",
+      "token_price_usd": "0.010093459631180000"
+    },
+    {
+      "mint_address": "GqmEdRD3zGUZdYPeuDeXxCc8Cj1DBmGSYK97TCwSpump",
+      "token_price_usd": "0.011709239074535200"
+    },
+    {
+      "mint_address": "yG6bXPEFaUnGAEHHqH9H7t1VSfaK7YrggCqHy35pump",
+      "token_price_usd": "0.008163273810612810"
+    },
+    {
+      "mint_address": "BjjvKX5k7gQoGRmvQAA5WMr7EkQ2cirGTSGxAznDpump",
+      "token_price_usd": "0.014660906760998200"
+    },
+    {
+      "mint_address": "EswvJvhPy8A8rWPdLJ5ATYW6cY5x483oS4QWWroZpump",
+      "token_price_usd": "0.004055620523461490"
+    },
+    {
+      "mint_address": "7iagMTDPfNSR5zVcERT1To7A9eaQoz58dJAh42EMHcCC",
+      "token_price_usd": "0.003844023290821380"
     }
    ];
   useEffect(() => {

@@ -43,114 +43,31 @@ const TrendingCoins = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [displayMode, setDisplayMode] = useState<'table' | 'sections'>('table');
   const csvHistoryData = [
-    {
-      "mint_address": "HeJUFDxfJSzYFUuHLxkMqCgytU31G6mjP4wKviwqpump",
-      "token_price_usd": "0.03599154637526515"
-    },
-    {
-      "mint_address": "qiaupfns561LJPudU2YL48S2mx1nbekrn8V4RrpyJG6",
-      "token_price_usd": "0.007705233186906986"
-    },
-    {
-      "mint_address": "CzLSujWBLFsSjncfkh59rUFqvafWcY5tzedWJSuypump",
-      "token_price_usd": "0.013949596970320997"
-    },
-    {
-      "mint_address": "H7ed7UgcLp3ax4X1CQ5WuWDn6d1pprfMMYiv5ejwLWWU",
-      "token_price_usd": "0.00003140861813445909"
-    },
-    {
-      "mint_address": "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump",
-      "token_price_usd": "0.02159479456224017"
-    },
-    {
-      "mint_address": "2GPJhV9jNrj7TaLYMRgWkcy6sTKLcwntv7nZ7qDyMRGM",
-      "token_price_usd": "0.010046584558374485"
-    },
-    {
-      "mint_address": "BoAQaykj3LtkM2Brevc7cQcRAzpqcsP47nJ2rkyopump",
-      "token_price_usd": "0.014376705332664075"
-    },
-    {
-      "mint_address": "Cy4DSbZW4CE6cG6HDqQFhXxpHTdm41SY9hBB1JG6pump",
-      "token_price_usd": "0.0039014835410562066"
-    },
-    {
-      "mint_address": "DEJiPKx5GActUtB6qUssreUxkhXtL4hTQAAJZ7Ccw8se",
-      "token_price_usd": "0.01608722425383271"
-    },
-    {
-      "mint_address": "GJAFwWjJ3vnTsrQVabjBVK2TYB1YtRCQXRDfDgUnpump",
-      "token_price_usd": "0.020066650880012887"
-    },
-    {
-      "mint_address": "J7tYmq2JnQPvxyhcXpCDrvJnc9R5ts8rv7tgVHDPsw7U",
-      "token_price_usd": "0.014801094410418577"
-    },
-    {
-      "mint_address": "H2c31USxu35MDkBrGph8pUDUnmzo2e4Rf4hnvL2Upump",
-      "token_price_usd": "0.020364699127351234"
-    },
-    {
-      "mint_address": "FqvtZ2UFR9we82Ni4LeacC1zyTiQ77usDo31DUokpump",
-      "token_price_usd": "0.035986293107104175"
-    },
-    {
-      "mint_address": "CCEmLiB7qJP59q5PbqHerP3th7bUAG9kPft9ePwYpump",
-      "token_price_usd": "0.010891144869376354"
-    },
-    {
-      "mint_address": "2zrH2jE542mzB4HABgBjdWMQPtNC5H12pwo1iLpfpump",
-      "token_price_usd": "0.005621915501925176"
-    },
-    {
-      "mint_address": "GVwpWU5PtJFHS1mH35sHmsRN1XWUwRV3Qo94h5Lepump",
-      "token_price_usd": "0.013029948483552977"
-    },
-    {
-      "mint_address": "CBdCxKo9QavR9hfShgpEBG3zekorAeD7W1jfq2o3pump",
-      "token_price_usd": "0.058874657864975400"
-    },
-    {
-      "mint_address": "ABDoiSudvFjjJ25rtXn8V2b6QGrH59KN6thAbsPvpump",
-      "token_price_usd": "0.005803377054110580"
-    },
-    {
-      "mint_address": "2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump",
-      "token_price_usd": "0.044531201094114500"
-    },
-    {
-      "mint_address": "6JGSHS9GrE9uG8ix63w3DPMYHrgrJ6J4QyHbBhAepump",
-      "token_price_usd": "0.001593499212493220"
-    },
-    {
-      "mint_address": "39qibQxVzemuZTEvjSB7NePhw9WyyHdQCqP8xmBMpump",
-      "token_price_usd": "0.035013207403630400"
-    },
-    {
-      "mint_address": "D8kgv5BRyfxUgTJGhkPJcw1Neo1eaneENC5XxC99pump",
-      "token_price_usd": "0.010093459631180000"
-    },
-    {
-      "mint_address": "GqmEdRD3zGUZdYPeuDeXxCc8Cj1DBmGSYK97TCwSpump",
-      "token_price_usd": "0.011709239074535200"
-    },
-    {
-      "mint_address": "yG6bXPEFaUnGAEHHqH9H7t1VSfaK7YrggCqHy35pump",
-      "token_price_usd": "0.008163273810612810"
-    },
-    {
-      "mint_address": "BjjvKX5k7gQoGRmvQAA5WMr7EkQ2cirGTSGxAznDpump",
-      "token_price_usd": "0.014660906760998200"
-    },
-    {
-      "mint_address": "EswvJvhPy8A8rWPdLJ5ATYW6cY5x483oS4QWWroZpump",
-      "token_price_usd": "0.004055620523461490"
-    },
-    {
-      "mint_address": "7iagMTDPfNSR5zVcERT1To7A9eaQoz58dJAh42EMHcCC",
-      "token_price_usd": "0.003844023290821380"
-    }
+    { mint_address: "qiaupfns561LJPudU2YL48S2mx1nbekrn8V4RrpyJG6", token_price_usd: "0.007705233186906990" },
+    { mint_address: "BoAQaykj3LtkM2Brevc7cQcRAzpqcsP47nJ2rkyopump", token_price_usd: "0.014376705332664100" },
+    { mint_address: "GmbC2HgWpHpq9SHnmEXZNT5e1zgcU9oASDqbAkGTpump", token_price_usd: "0.011742727480775800" },
+    { mint_address: "66gsTs88mXJ5L4AtJnWqFW6H2L5YQDRy4W41y6zbpump", token_price_usd: "0.03797424020885380" },
+    { mint_address: "39qibQxVzemuZTEvjSB7NePhw9WyyHdQCqP8xmBMpump", token_price_usd: "0.03501320740363040" },
+    { mint_address: "Cy4DSbZW4CE6cG6HDqQFhXxpHTdm41SY9hBB1JG6pump", token_price_usd: "0.0039014835410562100" },
+    { mint_address: "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump", token_price_usd: "0.021594794562240200" },
+    { mint_address: "HeJUFDxfJSzYFUuHLxkMqCgytU31G6mjP4wKviwqpump", token_price_usd: "0.035991546375265100" },
+    { mint_address: "FqvtZ2UFR9we82Ni4LeacC1zyTiQ77usDo31DUokpump", token_price_usd: "0.03598629310710420" },
+    { mint_address: "2KgAN8nLAU74wjiyKi85m4ZT6Z9MtqrUTGfse8Xapump", token_price_usd: "0.018790476236932200" },
+    { mint_address: "CBdCxKo9QavR9hfShgpEBG3zekorAeD7W1jfq2o3pump", token_price_usd: "0.058874657864975400" },
+    { mint_address: "BSqMUYb6ePwKsby85zrXaDa4SNf6AgZ9YfA2c4mZpump", token_price_usd: "0.004843852552071260" },
+    { mint_address: "GVwpWU5PtJFHS1mH35sHmsRN1XWUwRV3Qo94h5Lepump", token_price_usd: "0.013029948483553000" },
+    { mint_address: "2zrH2jE542mzB4HABgBjdWMQPtNC5H12pwo1iLpfpump", token_price_usd: "0.005621915501925180" },
+    { mint_address: "2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump", token_price_usd: "0.044531201094114500" },
+    { mint_address: "6JGSHS9GrE9uG8ix63w3DPMYHrgrJ6J4QyHbBhAepump", token_price_usd: "0.00159349921249322" },
+    { mint_address: "CzLSujWBLFsSjncfkh59rUFqvafWcY5tzedWJSuypump", token_price_usd: "0.013949596970321000" },
+    { mint_address: "HUdqc5MR5h3FssESabPnQ1GTgTcPvnNudAuLj5J6a9sU", token_price_usd: "0.02316750332116570" },
+    { mint_address: "GJAFwWjJ3vnTsrQVabjBVK2TYB1YtRCQXRDfDgUnpump", token_price_usd: "0.020066650880012900" },
+    { mint_address: "H2c31USxu35MDkBrGph8pUDUnmzo2e4Rf4hnvL2Upump", token_price_usd: "0.020364699127351200" },
+    { mint_address: "7KuFdcfzbc3LLoRHNRWfW1dhbPNzuCv41hyYbfSUpump", token_price_usd: "0.010398853359502600" },
+    { mint_address: "8x5VqbHA8D7NkD52uNuS5nnt3PwA8pLD34ymskeSo2Wn", token_price_usd: "0.07000218748072700" },
+    { mint_address: "CmpuL8k9KY3NrpfDRoJrVmuwd1zRMFRUxX55avyGpump", token_price_usd: "0.0033875115830854600" },
+    { mint_address: "LoL1RDQiUfifC2BX28xaef6r2G8ES8SEzgrzThJemMv", token_price_usd: "0.01287642250661450" },
+    { mint_address: "HAPPYwgFcjEJDzRtfWE6tiHE9zGdzpNky2FvjPHsvvGZ", token_price_usd: "0.006117542545298380" }
    ];
   useEffect(() => {
     const fetchTrendingCoins = async () => {

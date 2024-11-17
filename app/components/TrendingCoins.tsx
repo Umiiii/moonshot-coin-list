@@ -67,7 +67,17 @@ const TrendingCoins = () => {
     { mint_address: "8x5VqbHA8D7NkD52uNuS5nnt3PwA8pLD34ymskeSo2Wn", token_price_usd: "0.07000218748072700" },
     { mint_address: "CmpuL8k9KY3NrpfDRoJrVmuwd1zRMFRUxX55avyGpump", token_price_usd: "0.0033875115830854600" },
     { mint_address: "LoL1RDQiUfifC2BX28xaef6r2G8ES8SEzgrzThJemMv", token_price_usd: "0.01287642250661450" },
-    { mint_address: "HAPPYwgFcjEJDzRtfWE6tiHE9zGdzpNky2FvjPHsvvGZ", token_price_usd: "0.006117542545298380" }
+    { mint_address: "HAPPYwgFcjEJDzRtfWE6tiHE9zGdzpNky2FvjPHsvvGZ", token_price_usd: "0.006117542545298380" },
+    { mint_address: "U237C8hKyZYL42TEtTv6JGtdwDr3pZaQeeWMCVVpump", token_price_usd: "0.003227429135393261" },
+    { mint_address: "HPueqQjSgaSatMBKrvBvAnRmc6jnr51cPM1EjUJVpump", token_price_usd: "0.015802946878659654" },
+    { mint_address: "Em4rcuhX6STfB7mxb66dUXDmZPYCjDiQFthvzSzpump", token_price_usd: "0.014358833633117813" },
+    { mint_address: "D8kgv5BRyfxUgTJGhkPJcw1Neo1eaneENC5XxC99pump", token_price_usd: "0.010093459631179998" },
+    { mint_address: "FvgqHMfL9yn39V79huDPy3YUNDoYJpuLWng2JfmQpump", token_price_usd: "0.015996770953332913" },
+    { mint_address: "8SgNwESovnbG1oNEaPVhg6CR9mTMSK7jPvcYRe3wpump", token_price_usd: "0.04014123359020031" },
+    { mint_address: "5PsnNwPmMtsGZgG6ZqMoDJJi28BR5xpAotXHHiQhpump", token_price_usd: "0.012376856937235326" },
+    { mint_address: "CNvitvFnSM5ed6K28RUNSaAjqqz5tX1rA5HgaBN9pump", token_price_usd: "0.11806103611439163" },
+    { mint_address: "DKu9kykSfbN5LBfFXtNNDPaX35o4Fv6vJ9FKk7pZpump", token_price_usd: "0.05361566767849938" },
+    { mint_address: "GJtJuWD9qYcCkrwMBmtY1tpapV1sKfB2zUv9Q4aqpump", token_price_usd: "0.05230814037022719" }
    ];
   useEffect(() => {
     const fetchTrendingCoins = async () => {

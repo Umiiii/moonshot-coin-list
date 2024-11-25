@@ -1,7 +1,7 @@
 "use client";
 import Image from 'next/image';
 import { useState, useEffect, useMemo } from 'react';
-import { ChevronDownIcon, TableCellsIcon, ListBulletIcon, InformationCircleIcon, ClipboardDocumentIcon } from '@heroicons/react/24/solid';
+import { ChevronDownIcon, TableCellsIcon, ListBulletIcon, ClipboardDocumentIcon } from '@heroicons/react/24/solid';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TwitterShareButton, TwitterFollowButton } from 'react-twitter-embed';
 import { sendGAEvent } from '@next/third-parties/google';
@@ -223,17 +223,30 @@ const TrendingCoins = () => {
     return diffInHours <= 24;
   };
 
-  // Add this function to calculate price change since listing
-  const calculatePriceChangeSinceListed = (coin: Coin) => {
-    if (!coin.priceAtListed || coin.priceAtListed === 0) {
-      return { change: '-', percentage: '-' };
+  // // Add this function to calculate price change since listing
+  // const calculatePriceChangeSinceListed = (coin: Coin) => {
+  //   if (!coin.priceAtListed || coin.priceAtListed === 0) {
+  //     return { change: '-', percentage: '-' };
+  //   }
+  //   const change = coin.day.price - coin.priceAtListed;
+  //   const percentage = ((change / coin.priceAtListed) * 100).toFixed(2);
+  //   return {
+  //     change: change.toFixed(8),
+  //     percentage: `${percentage}%`
+  //   };
+  // };
+
+  const getTimeAgo = (date: string) => {
+    const now = new Date();
+    const listedDate = new Date(date);
+    const diffInMinutes = Math.floor((now.getTime() - listedDate.getTime()) / (1000 * 60));
+    
+    if (diffInMinutes < 60) {
+      return `(${diffInMinutes} minutes ago)`;
+    } else {
+      const diffInHours = Math.floor(diffInMinutes / 60);
+      return `(${diffInHours} hours ago)`;
     }
-    const change = coin.day.price - coin.priceAtListed;
-    const percentage = ((change / coin.priceAtListed) * 100).toFixed(2);
-    return {
-      change: change.toFixed(8),
-      percentage: `${percentage}%`
-    };
   };
 
   const copyToClipboard = (text: string) => {
@@ -335,8 +348,9 @@ const TrendingCoins = () => {
                       <thead className="bg-gray-50 sticky top-0 z-20">
                         <tr>
                           <th className="sticky left-0 z-30 bg-gray-50 px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Coin</th>
+                          <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Listed At</th>
                           <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Price /<br></br> Market Cap /<br></br> Holders</th>
-                          <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                          {/* <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
                             <div className="flex items-center">
                               Price At Listed /<br></br> Price Since Listed
                               <div className="relative ml-1 group">
@@ -346,12 +360,12 @@ const TrendingCoins = () => {
                                 </div>
                               </div>
                             </div>
-                          </th>
+                          </th> */}
                           <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">24h Change</th>
                           <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Volume</th>
                           <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Contract Address</th>
                           <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Created At</th>
-                          <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Listed At</th>
+                          
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-200">
@@ -409,18 +423,35 @@ const TrendingCoins = () => {
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
+  <div className="text-sm text-gray-500 flex flex-col">
+    {new Date(coin.listedAt).toLocaleString(undefined, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    })}
+    {isWithinLast24Hours(coin.listedAt) && (
+      <span className="text-blue-500 mt-1">
+        {getTimeAgo(coin.listedAt)}
+      </span>
+    )}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
                               <div className="text-base text-gray-800">${coin.day.price.toFixed(8)}</div>
                               <div className="text-sm text-gray-500">${formatMarketCap(coin)}</div>
                               <div className="text-sm text-gray-500">{coin.day.holders} holders</div>
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
+                            {/* <td className="px-6 py-4 whitespace-nowrap">
                               <div className="text-base text-gray-800">
                                 ${coin.priceAtListed ? coin.priceAtListed.toFixed(8) : '-'}
                               </div>
                               <div className={`text-sm ${calculatePriceChangeSinceListed(coin).change !== null && parseFloat(calculatePriceChangeSinceListed(coin).change) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                                 ${calculatePriceChangeSinceListed(coin).change !== null ? `${calculatePriceChangeSinceListed(coin).change} / ${calculatePriceChangeSinceListed(coin).percentage}` : '-'}
                               </div>
-                            </td>
+                            </td> */}
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className={`text-sm ${coin.day.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                                 {coin.day.change >= 0 ? '▲' : '▼'} {Math.abs(coin.day.change).toFixed(2)}%
@@ -433,22 +464,37 @@ const TrendingCoins = () => {
                               <div className="text-sm text-gray-900 flex items-center">
                                 {coin.chain === 'solana' ? (
                                   <>
-                                    <a
-                                      href={`https://solscan.io/token/${coin.contractAddress}`}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-blue-600 hover:text-blue-800 mr-2"
-                                      onClick={() => sendGAEvent({ event: 'clickContractAddress', coinId: coin.id, contractAddress: coin.contractAddress })}
-                                    >
-                                      {`${coin.contractAddress.slice(0, 6)}...${coin.contractAddress.slice(-4)}`}
-                                    </a>
-                                    <button
-                                      onClick={() => copyToClipboard(coin.contractAddress)}
-                                      className="text-gray-400 hover:text-gray-600"
-                                      title="Copy contract address"
-                                    >
-                                      <ClipboardDocumentIcon className="h-5 w-5" />
-                                    </button>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+  <div className="text-sm text-gray-900 flex flex-col space-y-2">
+    <div className="flex items-center">
+      <a
+        href={`https://solscan.io/token/${coin.contractAddress}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-600 hover:text-blue-800 mr-2"
+        onClick={() => sendGAEvent({ event: 'clickContractAddress', coinId: coin.id, contractAddress: coin.contractAddress })}
+      >
+        {`${coin.contractAddress.slice(0, 6)}...${coin.contractAddress.slice(-4)}`}
+      </a>
+      <button
+        onClick={() => copyToClipboard(coin.contractAddress)}
+        className="text-gray-400 hover:text-gray-600"
+        title="Copy contract address"
+      >
+        <ClipboardDocumentIcon className="h-5 w-5" />
+      </button>
+    </div>
+    <a
+      href={`https://dexscreener.com/solana/${coin.contractAddress}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-600 hover:text-blue-800"
+      onClick={() => sendGAEvent({ event: 'clickContractAddress', coinId: coin.id, contractAddress: coin.contractAddress })}
+    >
+      DexScreener
+    </a>
+  </div>
+</td>
                                   </>
                                 ) : (
                                   'N/A'
@@ -467,18 +513,7 @@ const TrendingCoins = () => {
                                 })}
                               </div>
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm text-gray-500">
-                                {new Date(coin.listedAt).toLocaleString(undefined, {
-                                  year: 'numeric',
-                                  month: 'short',
-                                  day: 'numeric',
-                                  hour: '2-digit',
-                                  minute: '2-digit',
-                                  hour12: true
-                                })}
-                              </div>
-                            </td>
+                            
                           </tr>
                         ))}
                       </tbody>
@@ -530,7 +565,7 @@ const TrendingCoins = () => {
                               <tr>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Coin</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price / Market Cap / Holders</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                   <div className="flex items-center">
                                     Price At Listed / Price Since Listed
                                     <div className="relative ml-1 group">
@@ -540,7 +575,7 @@ const TrendingCoins = () => {
                                       </div>
                                     </div>
                                   </div>
-                                </th>
+                                </th> */}
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">24h Change</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Volume</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contract Address</th>
@@ -606,14 +641,14 @@ const TrendingCoins = () => {
                                     <div className="text-sm text-gray-500">${formatMarketCap(coin)}</div>
                                     <div className="text-sm text-gray-500">{coin.day.holders} holders</div>
                                   </td>
-                                  <td className="px-6 py-4 whitespace-nowrap">
+                                  {/* <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="text-sm text-gray-900">
                                       ${coin.priceAtListed ? coin.priceAtListed.toFixed(8) : '-'}
                                     </div>
                                     <div className={`text-sm ${calculatePriceChangeSinceListed(coin).change !== null && parseFloat(calculatePriceChangeSinceListed(coin).change) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                               ${calculatePriceChangeSinceListed(coin).change !== null ? `${calculatePriceChangeSinceListed(coin).change} / ${calculatePriceChangeSinceListed(coin).percentage}` : '-'}
                             </div>
-                                  </td>
+                                  </td> */}
                                   <td className="px-6 py-4 whitespace-nowrap">
                                     <div className={`text-sm ${coin.day.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                                       {coin.day.change >= 0 ? '▲' : '▼'} {Math.abs(coin.day.change).toFixed(2)}%

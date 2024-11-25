@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { GoogleTagManager } from '@next/third-parties/google'; 
+import GoogleAdsense from './components/GoogleAdsense';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -43,6 +44,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <GoogleTagManager gtmId="G-151Q41BT6K" />
+      <GoogleAdsense pId="6345227285458042" />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

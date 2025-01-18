@@ -289,7 +289,7 @@ const TrendingCoins = () => {
                 url={'https://moonshot.umi.cat/?ref=home'}
                 options={{ text: 'Check out new listings on Moonshot' }}
               />
-              <TwitterFollowButton screenName="Geniusumi9" />
+              <TwitterFollowButton screenName="aezaumi" />
             </div>
             <button
               onClick={() => {
